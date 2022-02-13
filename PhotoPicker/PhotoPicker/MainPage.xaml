@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PhotoPicker.MainPage">
+
+    <StackLayout>
+        <Entry/>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+            <Button Clicked="TakePhotoAsync" Text="TakePhoto" />
+            <Button Clicked="GetPhotoAsync" Text="LoadPhoto" />
+        </StackLayout>
+        
+        <Button Text="Добавить"/>
+        <!--<Image x:Name="img" />-->
+
+
+        <ListView
+            x:Name="imgList"
+            HasUnevenRows="True"
+            ItemSelected="imgList_ItemSelected">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout>
+                            <!--<Image Source="{Binding}" />-->
+                            <Label Text="{Binding}" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+    </StackLayout>
+
+</ContentPage>
