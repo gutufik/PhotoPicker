@@ -27,7 +27,7 @@ namespace PhotoPicker
 
         void UpdateList()
         {
-            imgList.ItemsSource = Directory.GetFiles(folderPath).Select(f => Path.GetFullPath(f));
+            imgList.ItemsSource = App.Database.GetPhotos();
         }
 
         async void GetPhotoAsync(object sender, EventArgs e)
@@ -35,14 +35,21 @@ namespace PhotoPicker
             try
             {
                 var photo = await MediaPicker.PickPhotoAsync();
-                //img.Source = ImageSource.FromFile(photo.FullPath);
-                var newFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), photo.FileName);
-                using (var stream = await photo.OpenReadAsync())
-                using (var newStream = File.OpenWrite(newFile))
-                    await stream.CopyToAsync(newStream);
+                App.Database.SavePhoto(new Photo() 
+                {
+                    Name = photoNameEntry.Text == null ? "Photo" : photoNameEntry.Text,
+                    Path = photo.FullPath
+                });
 
-                Debug.WriteLine($"Путь фото {photo.FullPath}");
                 //img.Source = ImageSource.FromFile(photo.FullPath);
+                //var newFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), photo.FileName);
+                //using (var stream = await photo.OpenReadAsync())
+                //using (var newStream = File.OpenWrite(newFile))
+                //    await stream.CopyToAsync(newStream);
+
+                //Debug.WriteLine($"Путь фото {photo.FullPath}");
+                //img.Source = ImageSource.FromFile(photo.FullPath);
+                photoNameEntry.Text = null;
                 UpdateList();
             }
             catch (Exception ex)
@@ -59,14 +66,12 @@ namespace PhotoPicker
                 {
                     Title = $"xamarin.{DateTime.Now.ToString("dd.MM.yyyy_hh.mm.ss")}.png"
                 });
-
-                var newFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), photo.FileName);
-                using (var stream = await photo.OpenReadAsync())
-                using (var newStream = File.OpenWrite(newFile))
-                    await stream.CopyToAsync(newStream);
-
-                Debug.WriteLine($"Путь фото {photo.FullPath}");
-                //img.Source = ImageSource.FromFile(photo.FullPath);
+                App.Database.SavePhoto(new Photo()
+                {
+                    Name = photoNameEntry.Text == null? "Photo": photoNameEntry.Text,
+                    Path = photo.FullPath
+                });
+                photoNameEntry.Text = null;
                 UpdateList();
             }
             catch (Exception ex)
@@ -77,7 +82,7 @@ namespace PhotoPicker
 
         private void imgList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            Navigation.PushAsync(new PhotoPage(imgList.SelectedItem as string));
+            Navigation.PushAsync(new PhotoPage(imgList.SelectedItem as Photo));
         }
     }
 }

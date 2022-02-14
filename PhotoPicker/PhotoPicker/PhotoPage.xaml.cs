@@ -14,10 +14,10 @@ namespace PhotoPicker
     public partial class PhotoPage : ContentPage
     {
         public string PhotoPath { get; set; }
-        public PhotoPage(string photo)
+        public PhotoPage(Photo photo)
         {
             InitializeComponent();
-            PhotoPath = photo;
+            PhotoPath = photo.Path;
             BindingContext = this;
         }
     }
