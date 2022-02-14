@@ -4,6 +4,7 @@
              x:Class="PhotoPicker.PhotoPage">
     <ContentPage.Content>
         <StackLayout>
+            <Entry x:Name="photoNameEntry" IsReadOnly="True"/>
             <Image Source="{Binding PhotoPath}"/>
         </StackLayout>
     </ContentPage.Content>

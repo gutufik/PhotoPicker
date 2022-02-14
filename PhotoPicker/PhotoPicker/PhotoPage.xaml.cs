@@ -18,6 +18,7 @@ namespace PhotoPicker
         {
             InitializeComponent();
             PhotoPath = photo.Path;
+            photoNameEntry.Text = photo.Name;
             BindingContext = this;
         }
     }

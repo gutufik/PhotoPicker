@@ -14,6 +14,7 @@ namespace PhotoPicker
     public partial class MainPage : ContentPage
     {
         string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        Photo newPhoto;
         public MainPage()
         {
             InitializeComponent();
@@ -35,22 +36,11 @@ namespace PhotoPicker
             try
             {
                 var photo = await MediaPicker.PickPhotoAsync();
-                App.Database.SavePhoto(new Photo() 
+                newPhoto = new Photo()
                 {
                     Name = photoNameEntry.Text == null ? "Photo" : photoNameEntry.Text,
                     Path = photo.FullPath
-                });
-
-                //img.Source = ImageSource.FromFile(photo.FullPath);
-                //var newFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), photo.FileName);
-                //using (var stream = await photo.OpenReadAsync())
-                //using (var newStream = File.OpenWrite(newFile))
-                //    await stream.CopyToAsync(newStream);
-
-                //Debug.WriteLine($"Путь фото {photo.FullPath}");
-                //img.Source = ImageSource.FromFile(photo.FullPath);
-                photoNameEntry.Text = null;
-                UpdateList();
+                };
             }
             catch (Exception ex)
             {
@@ -66,13 +56,11 @@ namespace PhotoPicker
                 {
                     Title = $"xamarin.{DateTime.Now.ToString("dd.MM.yyyy_hh.mm.ss")}.png"
                 });
-                App.Database.SavePhoto(new Photo()
+                newPhoto = new Photo()
                 {
-                    Name = photoNameEntry.Text == null? "Photo": photoNameEntry.Text,
+                    Name = photoNameEntry.Text == null ? "Photo" : photoNameEntry.Text,
                     Path = photo.FullPath
-                });
-                photoNameEntry.Text = null;
-                UpdateList();
+                };
             }
             catch (Exception ex)
             {
@@ -83,6 +71,20 @@ namespace PhotoPicker
         private void imgList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             Navigation.PushAsync(new PhotoPage(imgList.SelectedItem as Photo));
+        }
+
+        private void AddPhoto(object sender, EventArgs e)
+        {
+            try
+            {
+                App.Database.SavePhoto(newPhoto);
+                newPhoto = null;
+                UpdateList();
+            }
+            catch
+            {
+                DisplayAlert("Сообщение об ошибке", "Фото не выбрано", "ОК");
+            }
         }
     }
 }
